@@ -1,8 +1,21 @@
 import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import Login from './pages/Auth/Login';
+import Register from './pages/Auth/Register';
+import Home from './pages/Home';
+import Todo from './pages/Todo';
 
 function App() {
-  return <h1 className="font-primary h-screen w-screen bg-blue-primary text-white text-5xl flex items-center justify-center font-bold">MERN-PWA-To Do List</h1>;
-
+  return (
+    <Router>
+      <Switch>
+        <Route exact path="/" component={Home} />
+        <Route path="/register" component={Register} />
+        <Route path="/login" component={Login} />
+        <Route path="/todo" component={Todo} />
+      </Switch>
+    </Router>
+  );
 }
 
 export default App;

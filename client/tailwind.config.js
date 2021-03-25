@@ -1,11 +1,16 @@
 module.exports = {
   purge: {
-    enabled: true,
     content: ['./src/**/*.{js,jsx}', './public/index.html']
   },
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
+      screens: {
+        'xs': '360px',
+        'sm': '640px',
+        'md': '1024px',
+        'lg': '1280px',
+      },
       fontFamily: {
         primary: ['Poppins', 'sans-serif']
       },
@@ -28,11 +33,14 @@ module.exports = {
           dark: "#aa0000",
           light: "#ff8080"
         }
-      }
+      },
+
     },
   },
   variants: {
-    extend: {},
+    extend: {
+      fontWeight: ['hover'],
+    },
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/forms')],
 }
