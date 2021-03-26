@@ -1,5 +1,9 @@
-import React from "react";
+// lib
 import { ArrowLeftOutlined } from "@ant-design/icons";
+import React from "react";
+import { toast } from "react-toastify";
+// local
+import { register } from "../../actions/authAction";
 
 const Register = ({ history }) => {
   const [form, setForm] = React.useState({
@@ -8,13 +12,22 @@ const Register = ({ history }) => {
     password: "",
     confirmPassword: "",
   });
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(form);
+    try {
+      await register(form);
+      toast.success("Register success. Please Login.");
+      history.push("/login");
+    } catch (err) {
+      toast.error(err.response.data);
+    }
   };
+
   return (
     <div className="flex flex-col justify-center items-center h-screen bg-blue-primary font-primary">
       <div className="flex items-center">

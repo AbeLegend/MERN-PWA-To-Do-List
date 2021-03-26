@@ -1,7 +1,13 @@
-import React from "react";
+// lib
 import { ArrowLeftOutlined } from "@ant-design/icons";
+import React from "react";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+// local
+import { login } from "../../actions/authAction";
 
 const Login = ({ history }) => {
+  const dispatch = useDispatch();
   const [form, setForm] = React.useState({
     email: "",
     password: "",
@@ -9,10 +15,23 @@ const Login = ({ history }) => {
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(form);
+    try {
+      const res = await login(form);
+      // save user and token to localstorage
+      window.localStorage.setItem("auth", JSON.stringify(res.data));
+      // sace user and token to redux
+      dispatch({
+        type: "LOGIN",
+        payload: res.data,
+      });
+      history.push("/todo");
+    } catch (err) {
+      toast.error(err.response.data);
+    }
   };
+
   return (
     <div className="flex flex-col justify-center items-center h-screen bg-blue-primary font-primary">
       <div className="flex items-center">
