@@ -1,17 +1,57 @@
+// lib
 import React from "react";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+// local
+import { addTodo, getTodo } from "../actions/todoAction";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import TodoList from "../components/TodoList";
 
 const Todo = () => {
+  // use
+  const {
+    auth: { token },
+  } = useSelector((state) => ({ ...state }));
+
+  // state
   const [form, setForm] = React.useState({ todo: "" });
+  const [myTodo, setMyTodo] = React.useState([]);
+
+  // handle change
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-  const handleSubmit = (e) => {
+
+  // handle submit
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(form);
+    try {
+      const { data } = await addTodo(form, token);
+      toast.success(`Success add ${data.todo}.`);
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+    } catch (err) {
+      toast.error(err.response.data);
+    }
   };
+
+  // getTodo
+  const getTodos = async (token) => {
+    try {
+      const { data } = await getTodo(token);
+      setMyTodo(data.todo);
+    } catch (err) {
+      console.log(err.response.data);
+    }
+  };
+
+  // useEffect
+  React.useEffect(() => {
+    getTodos(token);
+  }, [token]);
+
   return (
     <div className="flex flex-col h-screen justify-between font-primary">
       <Header />
@@ -31,25 +71,7 @@ const Todo = () => {
             Add
           </button>
         </form>
-        <TodoList />
-        <TodoList />
-        <TodoList />
-        <TodoList />
-        <TodoList />
-        <TodoList />
-        <TodoList />
-        <TodoList />
-        <TodoList />
-        <TodoList />
-        <TodoList />
-        <TodoList />
-        <TodoList />
-        <TodoList />
-        <TodoList />
-        <TodoList />
-        <TodoList />
-        <TodoList />
-        <TodoList />
+        {myTodo && myTodo.map((t) => <TodoList key={t._id} todo={t} />)}
       </main>
       <Footer />
     </div>

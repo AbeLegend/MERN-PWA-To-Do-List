@@ -8,9 +8,8 @@ export const addTodo = async (req, res) => {
     //  validation
     if (!_id) return res.status(400).send('Error. Please login first to create todo');
     if (!todo) return res.status(400).send('Please insert todo first.');
-
     //  save
-    const newTodo = new Todo({ userId: _id, todo });
+    let newTodo = new Todo({ userId: _id, todo });
     newTodo.save((err, result) => {
       if (err) {
         return res.status(400).send('Error. Please try again.');

@@ -1,11 +1,15 @@
 // lib
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import React from "react";
+import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 // local
 import { register } from "../../actions/authAction";
 
 const Register = ({ history }) => {
+  // use
+  const { auth } = useSelector((state) => ({ ...state }));
+  // state
   const [form, setForm] = React.useState({
     name: "",
     email: "",
@@ -13,10 +17,12 @@ const Register = ({ history }) => {
     confirmPassword: "",
   });
 
+  // handle change
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  // handle submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -27,6 +33,15 @@ const Register = ({ history }) => {
       toast.error(err.response.data);
     }
   };
+
+  // useEffect
+  React.useEffect(() => {
+    if (auth !== null) {
+      if (auth.token) {
+        history.push("/todo");
+      }
+    }
+  }, [auth, history]);
 
   return (
     <div className="flex flex-col justify-center items-center h-screen bg-blue-primary font-primary">

@@ -1,14 +1,18 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 
-const Header = ({ history }) => {
+const Header = () => {
+  // use
   const dispatch = useDispatch();
+  const history = useHistory();
   const {
     auth: {
       user: { name },
     },
   } = useSelector((state) => ({ ...state }));
 
+  // logout
   const logout = () => {
     dispatch({
       type: "LOGOUT",
