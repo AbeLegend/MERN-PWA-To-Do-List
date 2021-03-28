@@ -11,7 +11,7 @@ import { clientsClaim } from 'workbox-core';
 import { ExpirationPlugin } from 'workbox-expiration';
 import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
-import { StaleWhileRevalidate } from 'workbox-strategies';
+import { StaleWhileRevalidate, NetworkFirst } from 'workbox-strategies';
 
 clientsClaim();
 
@@ -60,6 +60,26 @@ registerRoute(
     ],
   })
 );
+
+registerRoute(({ url }) => url.origin === 'https://fonts.googleapis.com' || url.origin === 'https://fonts.gstatic.com', new NetworkFirst({
+  cacheName: 'fonts',
+  plugins: [
+    new ExpirationPlugin({
+      maxAgeSeconds: 60 * 60 * 24 * 356,
+      maxEntries: 30
+    })
+  ]
+}));
+
+registerRoute(({ url }) => url.origin.includes("api-mern-pwa-to-do-list.herokuapp.com"), new NetworkFirst({
+  cacheName: 'apidata',
+  plugins: [
+    new ExpirationPlugin({
+      maxAgeSeconds: 360,
+      maxEntries: 30
+    })
+  ]
+}));
 
 // This allows the web app to trigger skipWaiting via
 // registration.waiting.postMessage({type: 'SKIP_WAITING'})
